@@ -1,0 +1,64 @@
+.container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Центрирует контент между верхом и низом */
+  align-items: center;
+  min-height: 100vh; /* Растягиваем на всю высоту окна */
+  padding: 2rem;
+  text-align: center;
+  background-color: inherit;
+  color: inherit;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: inherit; /* Соответствует цветовой схеме */
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1.2em;
+  font-weight: 500;
+  background-color: var(--button-bg-color, #1a1a1a);
+  color: var(--button-text-color, #ffffff);
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.button:hover {
+  background-color: var(--button-hover-bg-color, #646cff);
+  border-color: #646cff;
+  color: white;
+}
+
+.footer {
+  margin-top: auto; /* Это позволит подвалу оставаться внизу */
+  font-size: 1rem;
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
