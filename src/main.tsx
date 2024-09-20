@@ -8,6 +8,7 @@ import App from './components/App/App.tsx'
 import './index.css'
 import AdjToReach from './components/AdjToReach/AdjToReach.tsx';
 import GraphProperties from './components/GraphProperties/GraphProperties.tsx';
+import AdjToIncidence from './components/AdjToIncidence/AdjToIncidence.tsx';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,11 @@ const router = createBrowserRouter([
   {
     path: "graph-properties",
     element: <GraphProperties />,
-  }
+  },
+  {
+    path: "adj-to-incidence",
+    element: <AdjToIncidence />,
+  },
 ]);
 
 createRoot(document.getElementById('root')!).render(

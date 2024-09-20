@@ -18,11 +18,17 @@ const App: React.FC = () => {
       <main>
         <section>
           <nav className={styles.buttons}>
-            <button className={styles.button} onClick={() => handleNavigate('/adj-to-reach')}>
-              Матрица смежности в матрицу достижимости
-            </button>
             <button className={styles.button} onClick={() => handleNavigate('/graph-properties')}>
               Радиус и диаметр графа
+            </button>
+            <button className={styles.button} onClick={() => handleNavigate('/adj-to-incidence')}>
+              Матрица смежности в матрицу инцидентности
+            </button>
+            <button className={styles.button} onClick={() => handleNavigate('/incidence-to-adj')}>
+              Матрица инцидентности в матрицу смежности
+            </button>
+            <button className={styles.button} onClick={() => handleNavigate('/adj-to-reach')}>
+              Матрица смежности в матрицу достижимости
             </button>
           </nav>
         </section>
