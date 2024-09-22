@@ -80,22 +80,6 @@ export const warshallAlgorithm = (matrix: number[][]): number[][] => {
   return reachabilityMatrix;
 };
 
-export const generateIncidenceMatrix = (adjacencyMatrix: number[][]): number[][] => {
-  const size = adjacencyMatrix.length;
-  const incidenceMatrix: number[][] = Array.from({ length: size }, () => Array(size).fill(0));
-
-
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
-      if (adjacencyMatrix[i][j] === 1) {
-        incidenceMatrix[i][j] = 1;
-      }
-    }
-  }
-
-  return incidenceMatrix
-};
-
 export const adjToIncidenceMatrix = (matrix: number[][]): number[][] => {
   const n = matrix.length;
   const edges: [number, number][] = [];
@@ -135,4 +119,135 @@ export const adjToIncidenceMatrix = (matrix: number[][]): number[][] => {
   });
 
   return incidenceMatrix;
+};
+
+// Функция для определения типа графа (ориентированный или неориентированный)
+export const determineGraphType = (matrix: number[][]): boolean => {
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+
+  for (let j = 0; j < cols; j++) {
+    let hasPositive = false;
+    let hasNegative = false;
+
+    for (let i = 0; i < rows; i++) {
+      if (matrix[i][j] === 1) hasPositive = true;
+      if (matrix[i][j] === -1) hasNegative = true;
+    }
+
+    if (hasPositive && hasNegative) {
+      return true;  // Ориентированный граф
+    }
+  }
+
+  return false;  // Неориентированный граф
+};
+
+// Преобразование матрицы инцидентности в матрицу смежности
+export const incidenceToAdjMatrix = (incidenceMatrix: number[][]): number[][] => {
+  const vertexCount = incidenceMatrix.length;  // Количество вершин
+  const edgeCount = incidenceMatrix[0].length; // Количество рёбер
+
+  const adjMatrix = Array.from({ length: vertexCount }, () => Array(vertexCount).fill(0));
+
+  // Определяем, является ли граф ориентированным
+  const isDirected = determineGraphType(incidenceMatrix);
+
+  for (let j = 0; j < edgeCount; j++) {
+    let fromVertex = -1;
+    let toVertex = -1;
+
+    for (let i = 0; i < vertexCount; i++) {
+      if (incidenceMatrix[i][j] === 1) {
+        if (fromVertex === -1) {
+          fromVertex = i;
+        } else {
+          toVertex = i;
+        }
+      } else if (incidenceMatrix[i][j] === -1) {
+        toVertex = i;
+      }
+    }
+
+    // Преобразование для ориентированных рёбер
+    if (isDirected && fromVertex !== -1 && toVertex !== -1) {
+      adjMatrix[fromVertex][toVertex] = 1;
+    }
+
+    // Преобразование для неориентированных рёбер
+    if (!isDirected && fromVertex !== -1 && toVertex !== -1) {
+      adjMatrix[fromVertex][toVertex] = 1;
+      adjMatrix[toVertex][fromVertex] = 1;
+    }
+  }
+
+  return adjMatrix;
+};
+
+// Генерация случайной матрицы инцидентности для ориентированного графа
+export const generateIncidenceMatrix = (rows: number, cols: number): number[][] => {
+  const incidenceMatrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+  for (let j = 0; j < cols; j++) {
+    const fromVertex = Math.floor(Math.random() * rows);
+    let toVertex = Math.floor(Math.random() * rows);
+    while (toVertex === fromVertex) {
+      toVertex = Math.floor(Math.random() * rows); // Избегаем петель
+    }
+    incidenceMatrix[fromVertex][j] = 1;
+    incidenceMatrix[toVertex][j] = -1;
+  }
+
+  return incidenceMatrix;
+};
+
+// Генерация случайной матрицы инцидентности для неориентированного графа
+export const generateUndirectedIncidenceMatrix = (rows: number, cols: number): number[][] => {
+  const incidenceMatrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+  for (let j = 0; j < cols; j++) {
+    const v1 = Math.floor(Math.random() * rows);
+    let v2 = Math.floor(Math.random() * rows);
+    while (v1 === v2) {
+      v2 = Math.floor(Math.random() * rows); // Избегаем петель
+    }
+    incidenceMatrix[v1][j] = 1;
+    incidenceMatrix[v2][j] = 1;
+  }
+
+  return incidenceMatrix;
+};
+
+export const isMatrixFilled = (matrix: (number)[][]): boolean => {
+  return matrix.every(row => row.every(value => value.toString() !== ""));
+};
+
+export const areIsomorphic = (matrix1: number[][], matrix2: number[][]): boolean => {
+  const n = matrix1.length;
+
+  if (n !== matrix2.length) return false; // Если размеры матриц разные
+
+  const permute = (arr: number[]) => {
+      if (arr.length <= 1) return [arr];
+      const result: number[][] = [];
+      for (let i = 0; i < arr.length; i++) {
+          const rest = arr.slice(0, i).concat(arr.slice(i + 1));
+          const perms = permute(rest);
+          for (const perm of perms) {
+              result.push([arr[i], ...perm]);
+          }
+      }
+      return result;
+  };
+
+  const vertices = Array.from({ length: n }, (_, i) => i);
+  const permutations = permute(vertices);
+
+  for (const perm of permutations) {
+      const transformedMatrix = matrix1.map(row => perm.map(index => row[index]));
+      const isSame = transformedMatrix.every((row, i) => row.every((value, j) => value === matrix2[i][j]));
+      if (isSame) return true;
+  }
+
+  return false;
 };

@@ -30,12 +30,15 @@ const App: React.FC = () => {
             <button className={styles.button} onClick={() => handleNavigate('/adj-to-reach')}>
               Матрица смежности в матрицу достижимости
             </button>
+            <button className={styles.button} onClick={() => handleNavigate('/isomorphic')}>
+              Проверка на изоморфность
+            </button>
           </nav>
         </section>
       </main>
 
       <footer className={styles.footer}>
-        <p>Выберите нужный алгоритм для работы с графами</p>
+        <p>Выберите нужную операцию с графами</p>
       </footer>
     </div>
   );

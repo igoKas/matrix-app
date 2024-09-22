@@ -9,6 +9,8 @@ import './index.css'
 import AdjToReach from './components/AdjToReach/AdjToReach.tsx';
 import GraphProperties from './components/GraphProperties/GraphProperties.tsx';
 import AdjToIncidence from './components/AdjToIncidence/AdjToIncidence.tsx';
+import IncidenceToAdj from './components/IncidenceToAdj/IncidenceToAdj.tsx';
+import Isomorphic from './components/Isomorphic/Isomorphic.tsx';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
     path: "adj-to-incidence",
     element: <AdjToIncidence />,
   },
+  {
+    path: "incidence-to-adj",
+    element: <IncidenceToAdj />,
+  },
+  {
+    path: "isomorphic",
+    element: <Isomorphic />,
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(

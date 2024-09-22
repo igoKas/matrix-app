@@ -1,39 +1,82 @@
 import React from 'react';
 import styles from './MatrixControls.module.css';
 
-interface MatrixControlsProps {
-  size: number;
-  onSizeChange: (newSize: number) => void;
-  onGenerate: () => void;
-  isDirected?: boolean;  // Необязательный пропс для типа графа
-  onTypeChange?: (isDirected: boolean) => void; // Необязательный пропс для изменения типа графа
+interface ButtonAction {
+  label: string;
+  onClick: () => void;
 }
 
-const MatrixControls: React.FC<MatrixControlsProps> = ({ size, onSizeChange, onGenerate, isDirected, onTypeChange }) => {
+interface MatrixControlsProps {
+  size?: number;
+  maxSize?: number;
+  onSizeChange?: (newSize: number) => void;
+  rows?: number;
+  maxRows?: number;
+  cols?: number;
+  maxCols?: number;
+  onRowsChange?: (newRows: number) => void;
+  onColsChange?: (newCols: number) => void;
+  actions: ButtonAction[];
+}
+
+const MatrixControls: React.FC<MatrixControlsProps> = ({
+  size,
+  maxSize = 10,
+  onSizeChange,
+  rows,
+  maxRows = 5,
+  cols,
+  maxCols = 20,
+  onRowsChange,
+  onColsChange,
+  actions
+}) => {
   return (
     <div className={styles.container}>
-      <label>
-        Размер матрицы (1-10):
-        <input
-          type="number"
-          value={size}
-          onChange={(e) => onSizeChange(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
-          min="1"
-          max="10"
-        />
-      </label>
-      {/* Условно отображаем переключатель типа графа, если есть проп onTypeChange */}
-      {onTypeChange && (
-        <label className={styles.typeLabel}>
+      {onSizeChange && size !== undefined ? (
+        <label>
+          Размер матрицы (1-{maxSize}):
           <input
-            type="checkbox"
-            checked={!!isDirected}
-            onChange={(e) => onTypeChange(e.target.checked)}
+            className={styles.size_input}
+            type="number"
+            value={size}
+            onChange={(e) => onSizeChange(Math.min(maxSize, Math.max(1, parseInt(e.target.value) || 1)))}
+            min="1"
+            max={maxSize}
           />
-          Ориентированный граф
         </label>
+      ) : (
+        <>
+          <label>
+            Количество вершин (1-{maxRows}):
+            <input
+              type="number"
+              value={rows}
+              onChange={(e) => onRowsChange?.(Math.min(maxRows, Math.max(1, parseInt(e.target.value) || 1)))}
+              min="1"
+              max={maxRows}
+            />
+          </label>
+          <label>
+            Количество рёбер:
+            <input
+              type="number"
+              value={cols}
+              onChange={(e) => onColsChange?.(Math.min(maxCols, Math.max(1, parseInt(e.target.value) || 1)))}
+              min="1"
+              max={maxCols}
+            />
+          </label>
+        </>
       )}
-      <button onClick={onGenerate}>Сгенерировать матрицу</button>
+
+      <div className={styles.buttonContainer}>
+        {actions.map((action, index) => (
+          <button key={index} onClick={action.onClick}>
+            {action.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
